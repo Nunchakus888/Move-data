@@ -1,0 +1,27 @@
+*.iml
+*.pyc
+.idea/
+.log.*
+data_gateway/dataGateway/src/main/test/*
+logs/**
+target/**
+sumscopeUMS/target/
+websocket-gw/target/
+.vscode
+
+# Build tools
+build-local.properties
+deps
+/bin
+build
+.gradle
+target
+GTAGS
+GRTAGS
+GPATH
+prop
+out
+generated
+*.log
+*.iml
+.idea

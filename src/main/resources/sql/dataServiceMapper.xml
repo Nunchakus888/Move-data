@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sumscope.cdhplus.maintain.mapper.MaintainMapper">
+    <select id="getFromTLog" resultType="com.sumscope.cdhplus.maintain.domain.LogData" parameterType="Map">
+        SELECT
+        LOGID AS logId,
+        LOGTYPE AS logType,
+        USERNAME AS userName,
+        CLASSNAME AS className,
+        METHOD AS method,
+        CREATETIME AS createTime,
+        LOGLEVEL AS logLevel,
+        MSG AS msg,
+        SQL_ROWCOUNT AS sqlRowCount,
+        MSG_DETAIL AS msgDetail,
+        APINAME AS apiName,
+        SQL_COLCOUNT AS sqlColcount,
+        SQL_TAKETIME AS sqlTakeTime,
+        DATA_SOURCE_ID AS dataSource
+        FROM t_log_backup2
+        WHERE CREATETIME &lt; (CURDATE())
+        ORDER BY LOGID
+        LIMIT #{start}, #{size}
+    </select>
+
+    <insert id="insert2TLog" parameterType="List">
+        INSERT INTO t_log_history VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.logId},#{item.logType},#{item.userName},#{item.className},#{item.method},
+            #{item.createTime},#{item.logLevel},#{item.msg},#{item.sqlRowCount},#{item.msgDetail},
+            #{item.apiName},#{item.sqlColcount},#{item.sqlTakeTime},#{item.dataSource})
+        </foreach>
+    </insert>
+
+    <delete id="delete2TLog" parameterType="List">
+        delete from t_log_backup2 where 1=1 and
+        <foreach collection="list" item="item" open="(" separator="OR" close=")">
+            LOGID = #{item.logId}
+        </foreach>
+    </delete>
+
+    <update id="createNewTable">
+        CREATE TABLE IF NOT EXISTS t_log_history like t_log
+    </update>
+</mapper>
